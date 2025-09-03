@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Menu System - Super Admin Dashboard</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <svg fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 11h8V3H3v8zm2-6h4v4H5V5zm8-2v8h8V3h-8zm6 6h-4V5h4v4zM3 21h8v-8H3v8zm2-6h4v4H5v-4zm13-2h3v2h-3v-2zm0 4h3v2h-3v-2zm0 4h3v2h-3v-2zM14 7h2v2h-2V7zm0 8h2v2h-2v-2zM9 3h2v2H9V3zm0 16h2v2H9v-2z"/>
+                    </svg>
+                    QR Menu System
+                </div>
+                <nav>
+                    <ul class="nav-menu">
+                        <li><a href="dashboard-super-admin.html" class="active">Dashboard</a></li>
+                        <li><a href="restaurants.html">Restaurants</a></li>
+                        <li><a href="branches.html">Branches</a></li>
+                        <li><a href="users.html">Users</a></li>
+                        <li><a href="orders.html">Orders</a></li>
+                        <li><a href="modules.html">Modules</a></li>
+                        <li><a href="qrcode.html">QR Codes</a></li>
+                        <li><a href="#" onclick="logout()">Logout</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="dashboard">
+        <div class="container">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Super Admin Dashboard</h1>
+                <div class="user-info">
+                    <span id="userName">Loading...</span>
+                    <div class="user-avatar" id="userAvatar">SA</div>
+                </div>
+            </div>
+
+            <!-- System Overview Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h3>Total Restaurants</h3>
+                    <div class="stat-value" id="totalRestaurants">0</div>
+                    <div class="stat-change positive">+5% this month</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Branches</h3>
+                    <div class="stat-value" id="totalBranches">0</div>
+                    <div class="stat-change positive">+12% this month</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <div class="stat-value" id="totalUsers">0</div>
+                    <div class="stat-change positive">+8% this month</div>
+                </div>
+                <div class="stat-card">
+                    <h3>System Revenue</h3>
+                    <div class="stat-value" id="systemRevenue">৳0</div>
+                    <div class="stat-change positive">+22% this month</div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h2 class="card-title">Quick Actions</h2>
+                </div>
+                <div class="card-content">
+                    <div class="action-grid">
+                        <button class="action-btn" onclick="window.location.href='restaurants.html'">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            Add Restaurant
+                        </button>
+                        <button class="action-btn" onclick="window.location.href='users.html'">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                            Add User
+                        </button>
+                        <button class="action-btn" onclick="viewSystemReports()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path>
+                                <polyline points="14 2 14 8 20 8"></polyline>
+                                <line x1="16" y1="13" x2="8" y2="13"></line>
+                                <line x1="16" y1="17" x2="8" y2="17"></line>
+                                <polyline points="10 9 9 9 8 9"></polyline>
+                            </svg>
+                            System Reports
+                        </button>
+                        <button class="action-btn" onclick="viewSystemSettings()">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m4.22-10.22l4.24-4.24M6.34 18.66l4.24-4.24M1 12h6m6 0h6m-2.22 4.22l4.24 4.24M6.34 5.34l4.24 4.24"></path>
+                            </svg>
+                            System Settings
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h2 class="card-title">Recent System Activity</h2>
+                    <button class="btn-primary" onclick="viewAllActivity()">View All</button>
+                </div>
+                <div class="card-content">
+                    <div id="recentActivity">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Performing Restaurants -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h2 class="card-title">Top Performing Restaurants</h2>
+                </div>
+                <div class="card-content">
+                    <div id="topRestaurants">
+                        <div class="spinner"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Health -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h2 class="card-title">System Health</h2>
+                </div>
+                <div class="card-content">
+                    <div class="health-grid">
+                        <div class="health-item">
+                            <div class="health-indicator good"></div>
+                            <div>
+                                <strong>Database</strong>
+                                <div>Connected</div>
+                            </div>
+                        </div>
+                        <div class="health-item">
+                            <div class="health-indicator good"></div>
+                            <div>
+                                <strong>API Server</strong>
+                                <div>Running</div>
+                            </div>
+                        </div>
+                        <div class="health-item">
+                            <div class="health-indicator warning"></div>
+                            <div>
+                                <strong>Storage</strong>
+                                <div>85% Used</div>
+                            </div>
+                        </div>
+                        <div class="health-item">
+                            <div class="health-indicator good"></div>
+                            <div>
+                                <strong>Backup</strong>
+                                <div>Last: 2 hours ago</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="../assets/js/app.js"></script>
+    <script src="../assets/js/auth-redirect.js"></script>
+    <script>
+        let currentUser = null;
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Check authentication
+                const authResult = await APIService.getCurrentUser();
+                if (!authResult.success || authResult.user.role !== 'super_admin') {
+                    window.location.href = '../login.html';
+                    return;
+                }
+
+                currentUser = authResult.user;
+                updateUserInterface(currentUser);
+
+                // Load dashboard data
+                await loadSuperAdminData();
+
+            } catch (error) {
+                console.error('Super Admin dashboard initialization failed:', error);
+                window.location.href = '../login.html';
+            }
+        });
+
+        function updateUserInterface(user) {
+            document.getElementById('userName').textContent = user.name;
+            document.getElementById('userAvatar').textContent = 'SA';
+        }
+
+        async function loadSuperAdminData() {
+            try {
+                // Load system overview stats
+                await loadSystemStats();
+                
+                // Load recent activity
+                await loadRecentActivity();
+                
+                // Load top restaurants
+                await loadTopRestaurants();
+                
+            } catch (error) {
+                console.error('Failed to load Super Admin data:', error);
+                Utils.showToast('Failed to load dashboard data', 'error');
+            }
+        }
+
+        async function loadSystemStats() {
+            try {
+                const result = await APIService.getSuperAdminStats();
+                if (result.success) {
+                    const stats = result.data;
+                    document.getElementById('totalRestaurants').textContent = stats.total_restaurants;
+                    document.getElementById('totalBranches').textContent = stats.total_branches;
+                    document.getElementById('totalUsers').textContent = stats.total_users;
+                    document.getElementById('systemRevenue').textContent = Utils.formatPrice(stats.system_revenue);
+                }
+            } catch (error) {
+                console.error('Failed to load system stats:', error);
+            }
+        }
+
+        async function loadRecentActivity() {
+            const container = document.getElementById('recentActivity');
+            
+            try {
+                const result = await APIService.getSystemActivity();
+                if (result.success) {
+                    const activities = result.data;
+                    
+                    if (activities.length === 0) {
+                        container.innerHTML = '<p>No recent activity found.</p>';
+                        return;
+                    }
+
+                    const list = document.createElement('div');
+                    list.innerHTML = activities.map(activity => `
+                        <div class="activity-item">
+                            <div class="activity-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-text">${activity.description}</div>
+                                <div class="activity-time">${Utils.formatDateTime(activity.created_at)}</div>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    container.innerHTML = '';
+                    container.appendChild(list);
+                }
+            } catch (error) {
+                container.innerHTML = '<p style="color: #ef4444;">Failed to load recent activity.</p>';
+            }
+        }
+
+        async function loadTopRestaurants() {
+            const container = document.getElementById('topRestaurants');
+            
+            try {
+                const result = await APIService.getTopRestaurants();
+                if (result.success) {
+                    const restaurants = result.data;
+                    
+                    if (restaurants.length === 0) {
+                        container.innerHTML = '<p>No restaurant data available.</p>';
+                        return;
+                    }
+
+                    const table = document.createElement('table');
+                    table.className = 'data-table';
+                    
+                    table.innerHTML = `
+                        <thead>
+                            <tr>
+                                <th>Restaurant</th>
+                                <th>Branches</th>
+                                <th>Orders</th>
+                                <th>Revenue</th>
+                                <th>Growth</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${restaurants.map(restaurant => `
+                                <tr>
+                                    <td>${restaurant.name}</td>
+                                    <td>${restaurant.branch_count}</td>
+                                    <td>${restaurant.order_count}</td>
+                                    <td>${Utils.formatPrice(restaurant.revenue)}</td>
+                                    <td><span class="stat-change positive">+${restaurant.growth}%</span></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    `;
+                    
+                    container.innerHTML = '';
+                    container.appendChild(table);
+                }
+            } catch (error) {
+                container.innerHTML = '<p style="color: #ef4444;">Failed to load top restaurants.</p>';
+            }
+        }
+
+        function viewAllActivity() {
+            // This would navigate to a detailed activity log page
+            Utils.showToast('Activity log feature coming soon', 'info');
+        }
+
+        function viewSystemReports() {
+            // This would navigate to system reports page
+            Utils.showToast('System reports feature coming soon', 'info');
+        }
+
+        function viewSystemSettings() {
+            // This would navigate to system settings page
+            Utils.showToast('System settings feature coming soon', 'info');
+        }
+
+        async function logout() {
+            // Use AuthRedirect to handle logout
+            await AuthRedirect.handleLogout();
+        }
+    </script>
+
+    <style>
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .action-btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-2px);
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 32px;
+            height: 32px;
+            background: #e0e7ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4f46e5;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-time {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+
+        .health-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .health-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+        }
+
+        .health-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .health-indicator.good {
+            background: #10b981;
+        }
+
+        .health-indicator.warning {
+            background: #f59e0b;
+        }
+
+        .health-indicator.error {
+            background: #ef4444;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth Redirect Test</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 2rem;
+            background: #f8fafc;
+        }
+        .test-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        .test-section {
+            margin-bottom: 2rem;
+        }
+        .test-button {
+            background: #3b82f6;
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+        .test-button:hover {
+            background: #2563eb;
+        }
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f0f9ff;
+            border-radius: 0.25rem;
+            border-left: 4px solid #3b82f6;
+        }
+        .error {
+            background: #fef2f2;
+            border-left-color: #ef4444;
+        }
+        .success {
+            background: #f0fdf4;
+            border-left-color: #10b981;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Authentication Redirect Test</h1>
+        
+        <div class="test-section">
+            <h2>Test Role Redirection</h2>
+            <button class="test-button" onclick="testRoleRedirect('super_admin')">Test Super Admin</button>
+            <button class="test-button" onclick="testRoleRedirect('owner')">Test Owner</button>
+            <button class="test-button" onclick="testRoleRedirect('manager')">Test Manager</button>
+            <button class="test-button" onclick="testRoleRedirect('branch_manager')">Test Branch Manager</button>
+            <button class="test-button" onclick="testRoleRedirect('chef')">Test Chef</button>
+            <button class="test-button" onclick="testRoleRedirect('waiter')">Test Waiter</button>
+            <button class="test-button" onclick="testRoleRedirect('staff')">Test Staff</button>
+            <div id="roleTestResult"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Test Authentication Status</h2>
+            <button class="test-button" onclick="testAuthStatus()">Check Auth Status</button>
+            <button class="test-button" onclick="testGetCurrentUser()">Get Current User</button>
+            <div id="authTestResult"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Navigation</h2>
+            <button class="test-button" onclick="goToLogin()">Go to Login</button>
+            <button class="test-button" onclick="goToDefaultDashboard()">Go to Default Dashboard</button>
+        </div>
+    </div>
+
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/auth-redirect.js"></script>
+    <script>
+        function testRoleRedirect(role) {
+            const resultDiv = document.getElementById('roleTestResult');
+            
+            try {
+                const dashboardUrl = AuthRedirect.redirectToDashboard(role);
+                resultDiv.innerHTML = `
+                    <div class="result success">
+                        <strong>Role:</strong> ${role}<br>
+                        <strong>Dashboard URL:</strong> ${dashboardUrl}<br>
+                        <strong>Status:</strong> ✅ Mapping found
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <strong>Error:</strong> ${error.message}<br>
+                        <strong>Status:</strong> ❌ Test failed
+                    </div>
+                `;
+            }
+        }
+
+        async function testAuthStatus() {
+            const resultDiv = document.getElementById('authTestResult');
+            
+            try {
+                const result = await APIService.getCurrentUser();
+                resultDiv.innerHTML = `
+                    <div class="result ${result.success ? 'success' : 'error'}">
+                        <strong>Authenticated:</strong> ${result.success ? 'Yes' : 'No'}<br>
+                        ${result.success ? 
+                            `<strong>User:</strong> ${result.user.name} (${result.user.role})<br>
+                             <strong>Email:</strong> ${result.user.email}` :
+                            `<strong>Message:</strong> ${result.message}`
+                        }
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <strong>Error:</strong> ${error.message}<br>
+                        <strong>Status:</strong> ❌ Test failed
+                    </div>
+                `;
+            }
+        }
+
+        async function testGetCurrentUser() {
+            const resultDiv = document.getElementById('authTestResult');
+            
+            try {
+                const result = await APIService.getCurrentUser();
+                if (result.success) {
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <strong>User ID:</strong> ${result.user.id}<br>
+                            <strong>Name:</strong> ${result.user.name}<br>
+                            <strong>Email:</strong> ${result.user.email}<br>
+                            <strong>Role:</strong> ${result.user.role}<br>
+                            <strong>Restaurant ID:</strong> ${result.user.restaurant_id || 'N/A'}<br>
+                            <strong>Branch ID:</strong> ${result.user.branch_id || 'N/A'}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            <strong>Message:</strong> ${result.message}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <strong>Error:</strong> ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function goToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        function goToDefaultDashboard() {
+            window.location.href = 'admin/dashboard.html';
+        }
+    </script>
+</body>
+</html>
