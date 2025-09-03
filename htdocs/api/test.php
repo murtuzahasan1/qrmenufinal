@@ -1,1 +1,0 @@
-<?php echo 'API_SUCCESS:' . $_GET['token']; ?>
