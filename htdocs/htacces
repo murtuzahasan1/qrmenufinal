@@ -1,0 +1,22 @@
+# Enable the URL rewriting engine
+RewriteEngine On
+
+# Set the base for all rewrite rules
+RewriteBase /
+
+# --- API Rules ---
+# If the request is for the API, and is not a real file or directory,
+# route it through the api/index.php script.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^api/(.*)$ api/index.php [L,QSA]
+
+# --- Frontend Rule (for Single Page Applications like React, Vue, Angular) ---
+# If the request is NOT for the API, and is not a real file or directory,
+# route it to your main frontend file (e.g., index.php).
+# This allows your frontend router to handle the URL.
+RewriteCond %{REQUEST_URI} !^/api/
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L]
+
